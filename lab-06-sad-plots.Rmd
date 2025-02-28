@@ -78,6 +78,8 @@ knitr::include_graphics("img/staff-employment.png")
 Let's start by loading the data used to create this plot.
 
 ```{r load-data-staff, message = FALSE}
+library(readr)
+
 staff <- read_csv("data/instructional-staff.csv")
 ```
 
@@ -112,6 +114,8 @@ pivot_longer(data, cols, names_to = "name")
 -   The third argument, `names_to`, is a string specifying the name of the column to create from the data stored in the column names of data -- in this case `year`
 
 ```{r}
+library(tidyverse)
+
 staff_long <- staff %>%
   pivot_longer(cols = -faculty_type, names_to = "year") %>%
   mutate(year = as.numeric(year))
@@ -139,7 +143,13 @@ We can fix this using the `group` aesthetic following.
 ```{r fig.width = 10, fig.fullwidth = TRUE}
 staff_long %>%
   ggplot(aes(x = year, y = value, group = faculty_type, color = faculty_type)) +
-  geom_line()
+  geom_line() +
+  labs(
+    title = "Faculty Trend over Time (1975-2011)",
+    xlab = "",
+    ylab = ""
+  ) +
+  theme(legend.title = element_blank())
 ```
 
 1.  Include the line plot you made above in your report and make sure the figure width is large enough to make it legible.
@@ -147,8 +157,24 @@ staff_long %>%
 
 2.  Suppose the objective of this plot was to show that the proportion of part-time faculty have gone up over time compared to other instructional staff types.
     What changes would you propose making to this plot to tell this story and why.
+    
+***I would make the other lines of this plot gray to accentuate the part-time faculty line's growth.  This way, it will be clearer to see that this proportion went up over time while the others stayed relatively the same.***
 
 3.  Implement the changes you proposed in the previous exercise.
+
+```{r fig.width = 10, fig.fullwidth = TRUE}
+staff_long %>%
+  ggplot(aes(x = year, y = value, group = faculty_type, color = faculty_type)) +
+  geom_line() +
+  labs(
+    title = "Faculty Trend over Time (1975-2011)",
+    subtitle = "Part-time Faculty Increase",
+    xlab = "",
+    ylab = ""
+  ) +
+  theme(legend.title = element_blank()) +
+  scale_color_manual(values = c( rep("gray", 4), "red"))
+```
 
 🧶 ✅ ⬆️ Knit, *commit, and push your changes to GitHub with an appropriate commit message. Make sure to commit and push all changed files so that your Git pane is cleared up afterwards.*
 
